@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 Ariel Barreiros (https://github.com/arielbarreiros96)
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<templates xml:space="preserve">
+
+    <t
+        t-name="stock_orderpoint_reserve.ForecastedHeader"
+        t-inherit="stock.ForecastedHeader"
+        t-inherit-mode="extension"
+    >
+        <xpath expr="//div[@name='forecasted_value']/../.." position="after">
+            <div
+                t-if="this.orderpointReserve"
+                class="d-flex flex-wrap pb-1 justify-content-between o_orderpoint_reserve"
+            >
+                <div class="align-self-center">
+                    <h6 class="mb-0 text-muted">
+                        Available to replenish from
+                        <span t-out="this.orderpointReserve.location" />
+                    </h6>
+                </div>
+                <div class="row">
+                    <div class="col-md-auto text-center">
+                        <div
+                            class="h5 mb-0"
+                            t-out="_formatFloat(this.orderpointReserve.qty_available)"
+                        />
+                        <div class="small text-muted">On Hand</div>
+                    </div>
+                    <div class="h5 col-md-auto text-center mb-0">-</div>
+                    <div
+                        class="col-md-auto text-center"
+                        title="Stock other transfers have already set aside. A delivery asking for 15 units with 4 reserved has taken 4."
+                    >
+                        <div
+                            class="h5 mb-0"
+                            t-out="_formatFloat(this.orderpointReserve.committed_qty)"
+                        />
+                        <div class="small text-muted">Committed</div>
+                    </div>
+                    <div class="h5 col-md-auto text-center mb-0">-</div>
+                    <div class="col-md-auto text-center">
+                        <div
+                            class="h5 mb-0"
+                            t-out="_formatFloat(this.orderpointReserve.reserve)"
+                        />
+                        <div class="small text-muted">Reserve</div>
+                    </div>
+                    <div class="h5 col-md-auto text-center mb-0">=</div>
+                    <div
+                        t-attf-class="col-md-auto text-center #{!this.orderpointReserve.available_to_replenish and 'text-danger'}"
+                        name="orderpoint_reserve_available"
+                    >
+                        <div class="h5 mb-0">
+                            <span
+                                t-out="_formatFloat(this.orderpointReserve.available_to_replenish)"
+                            />
+                            <span t-out="' ' + this.uom" groups="uom.group_uom" />
+                        </div>
+                        <div class="small text-muted">Available to Replenish</div>
+                    </div>
+                </div>
+            </div>
+        </xpath>
+    </t>
+
+</templates>

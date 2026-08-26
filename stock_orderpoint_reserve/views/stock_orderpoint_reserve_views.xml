@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026 Ariel Barreiros (https://github.com/arielbarreiros96)
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <record id="view_stock_orderpoint_reserve_list" model="ir.ui.view">
+        <field name="name">stock.orderpoint.reserve.list</field>
+        <field name="model">stock.orderpoint.reserve</field>
+        <field name="arch" type="xml">
+            <list editable="bottom">
+                <field name="product_id" />
+                <field name="location_id" />
+                <field name="quantity" />
+                <field name="date_start" />
+                <field name="date_stop" />
+                <field name="qty_available" optional="show" />
+                <field name="committed_qty" optional="show" />
+                <field name="qty_available_to_replenish" optional="show" />
+                <field
+                    name="company_id"
+                    groups="base.group_multi_company"
+                    optional="show"
+                />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_stock_orderpoint_reserve_form" model="ir.ui.view">
+        <field name="name">stock.orderpoint.reserve.form</field>
+        <field name="model">stock.orderpoint.reserve</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget
+                        name="web_ribbon"
+                        title="Archived"
+                        bg_color="text-bg-danger"
+                        invisible="active"
+                    />
+                    <group>
+                        <group>
+                            <field name="product_id" />
+                            <field name="location_id" />
+                            <field name="quantity" />
+                            <field name="active" invisible="1" />
+                            <field
+                                name="company_id"
+                                groups="base.group_multi_company"
+                            />
+                        </group>
+                        <group>
+                            <field name="date_start" />
+                            <field name="date_stop" />
+                        </group>
+                        <group string="Source Location">
+                            <field name="qty_available" />
+                            <field name="committed_qty" />
+                            <field name="qty_available_to_replenish" />
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_stock_orderpoint_reserve_search" model="ir.ui.view">
+        <field name="name">stock.orderpoint.reserve.search</field>
+        <field name="model">stock.orderpoint.reserve</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="product_id" />
+                <field name="location_id" />
+                <filter
+                    name="filter_in_force"
+                    string="In Force"
+                    domain="['|', ('date_start', '=', False), ('date_start', '&lt;=', 'today'), '|', ('date_stop', '=', False), ('date_stop', '&gt;=', 'today')]"
+                />
+                <filter
+                    name="filter_inactive"
+                    string="Archived"
+                    domain="[('active', '=', False)]"
+                />
+                <group>
+                    <filter
+                        name="groupby_product"
+                        string="Product"
+                        context="{'group_by': 'product_id'}"
+                    />
+                    <filter
+                        name="groupby_location"
+                        string="Location"
+                        context="{'group_by': 'location_id'}"
+                    />
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_stock_orderpoint_reserve" model="ir.actions.act_window">
+        <field name="name">Replenishment Reserves</field>
+        <field name="res_model">stock.orderpoint.reserve</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_filter_in_force': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">Set a replenishment reserve</p>
+            <p>
+                A reserve holds a quantity of a product back in a location, out
+                of reach of automatic replenishment. Sales, manufacturing and
+                anything a user does by hand still consume it freely.
+            </p>
+        </field>
+    </record>
+
+    <menuitem
+        id="menu_stock_orderpoint_reserve"
+        name="Replenishment Reserves"
+        parent="stock.menu_warehouse_config"
+        action="action_stock_orderpoint_reserve"
+        groups="stock.group_stock_manager"
+        sequence="45"
+    />
+</odoo>

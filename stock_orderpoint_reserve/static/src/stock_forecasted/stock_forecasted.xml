@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- Copyright 2026 Ariel Barreiros (https://github.com/arielbarreiros96)
+     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<templates xml:space="preserve">
+
+    <t t-inherit="stock.Forecasted" t-inherit-mode="extension">
+        <xpath expr="//View" position="attributes">
+            <attribute name="context">this.orderpointReserveGraphContext</attribute>
+        </xpath>
+    </t>
+
+</templates>
